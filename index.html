@@ -7,301 +7,392 @@
 <body>
 <title>นับชิ้นงานด้วยกล้อง</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="นับชิ้นงานที่ไหลผ่านกล้อง เช่น น็อต M6 นับเมื่อชิ้นงานข้ามเส้นนับ ใช้ได้ทั้งคอมและมือถือ">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@700&family=Onest:wght@400;700&family=Anuphan:wght@400;600;700&display=swap">
 <style>
-/* Layout: instrument console — live camera stage on the left, counter + settings rail on the right; stacks counter → stage → settings on phones */
+/* Hallmark · shape: the seam, one tally band split marigold (counted) and sky (to go) at a line that moves with every part · genre: modern-minimal (app screen) · theme: custom, after "Ours: a budget for two" (by request) · job: count a lot · idea: "every part that crosses the line pushes the seam right" · vibe: "two colours, one line, a number you can read across the room"
+ * paper: #F4F8FB · accent: ink #121A2B · display: Funnel Display 700 + Anuphan (Thai) · body: Onest 400/700 + Anuphan (Thai) · hero: the tally band, counted on marigold, to-go on sky, the seam at the percent done · nav: sources on the left, wordmark on the centre, status on the right · footer: a paper strip, wordmark, one line, the repo · imagery: none, the live camera is the picture · signature: the seam moving across the band as parts cross the counting line
+ * axes: light/grotesk-heavy/warm · posture: full palette (counted marigold, to-go sky, controls ink, paper for the workbench) · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V4 · weakest: E, settings are dense; grouped under four plain headings with one control per row */
+/* Hallmark · answered F4 · the extra filled recipes are selected states (segment, direction, pressed tool), the only primary button is .btn */
+
 :root{
-  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#151A20; --muted:#5A6572; --line:#CDD5DD;
-  --accent:#E09A12; --accent-ink:#1E1400; --accent-soft:#FBEFD6;
-  --good:#1D8048; --bad:#B8430F; --stage:#0E1215;
-  --f-display:"Chakra Petch","IBM Plex Sans Thai",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --space-2xs:4px; --space-xs:8px; --space-sm:12px; --space-md:16px; --space-lg:24px; --space-xl:40px; --space-2xl:64px; --space-3xl:96px;
+  --text-xs:0.8125rem; --text-sm:0.875rem; --text-md:1rem; --text-lg:1.25rem; --text-xl:1.5625rem; --text-2xl:1.953rem;
+  --text-section:clamp(1.75rem, 2.2vw + 1rem, 3rem); --text-title:clamp(1.125rem, 0.6vw + 0.875rem, 1.375rem); --text-lead:clamp(1.0625rem, 0.3vw + 1rem, 1.25rem);
+  --text-hero:clamp(3.75rem, 9vw, 8.5rem); --text-hero-s:clamp(2.5rem, 7vw, 4rem);
+  --ease-out:cubic-bezier(0.16, 1, 0.3, 1); --dur-micro:120ms; --dur-short:220ms; --dur-long:520ms;
+  --container:1440px; --gutter:48px; --gap-columns:32px; --section-gap:120px;
+  --color-paper:#F4F8FB; --color-paper-2:#E7EEF3; --color-paper-3:#D9E2E9;
+  --color-ink:#121A2B; --color-ink-2:#313B4C; --color-muted:#545B69; --color-rule:#C9D2D9;
+  --color-you:#F7BE58; --color-you-2:#F9DA9D; --color-me:#84C8EB; --color-me-2:#B9E0F5;
+  --color-focus:#114CBF; --color-error:#BE2323; --color-success:#21763C;
+  --color-scrim:rgba(18,26,43,.82); --color-hud:rgba(18,26,43,.72);
+  --sim-belt:#D3DAE0; --sim-rail:#283041; --sim-rivet:#4A5366; --sim-steel:#5A616B; --sim-thread:#3B424C; --sim-head:#3E4550; --sim-hi:#717884;
+  --font-display:"Funnel Display","Anuphan",ui-sans-serif,system-ui,sans-serif;
+  --font-body:"Onest","Anuphan",ui-sans-serif,system-ui,sans-serif;
+  --radius-card:14px; --radius-inner:8px; --radius-pill:999px;
+  --tracking-display:-0.035em; --nav-h:72px;
+  color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#101317; --surface:#181C21; --ink:#E6EBF0; --muted:#94A0AC; --line:#2A3139;
-  --accent:#F0A93A; --accent-ink:#1E1400; --accent-soft:#33270F;
-  --good:#3FBF74; --bad:#F07A48; --stage:#07090B; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#101317; --surface:#181C21; --ink:#E6EBF0; --muted:#94A0AC; --line:#2A3139;
-  --accent:#F0A93A; --accent-ink:#1E1400; --accent-soft:#33270F;
-  --good:#3FBF74; --bad:#F07A48; --stage:#07090B; color-scheme:dark}
-*{box-sizing:border-box}
-[hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 40px}
-.app{max-width:1320px;margin:0 auto;display:grid;gap:16px}
+*,*::before,*::after{box-sizing:border-box}
+html,body{overflow-x:clip}
+html{scroll-padding-top:var(--space-2xl)}
+body{margin:0;background:var(--color-paper);color:var(--color-ink);font-family:var(--font-body);font-size:var(--text-md);line-height:1.55;-webkit-font-smoothing:antialiased}
+::selection{background:var(--color-you-2);color:var(--color-ink)}
+:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.16em}
+h1,h2,h3{margin:0;font-family:var(--font-display);font-weight:700;overflow-wrap:break-word;min-width:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
 button,input,select{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.num{font-variant-numeric:tabular-nums}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.container{width:100%;max-width:var(--container);margin-inline:auto;padding-left:max(var(--gutter), env(safe-area-inset-left, 0px));padding-right:max(var(--gutter), env(safe-area-inset-right, 0px))}
 
-.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
-.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
-.brand b{font:600 20px/1.1 var(--f-display);display:block}
-.brand small{color:var(--muted);font-size:12.5px}
-.mark{width:34px;height:34px;flex:none}
-.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:3px;gap:2px;flex-wrap:wrap}
-.seg button{border:0;background:none;padding:6px 12px;border-radius:6px;cursor:pointer;color:var(--muted);font-weight:500;white-space:nowrap}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
-.pill{display:inline-flex;align-items:center;gap:7px;font:500 13px var(--f-body);padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:var(--surface)}
-.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted)}
-.pill.on::before{background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 25%,transparent)}
+/* buttons: one primary style, one quiet */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-xs);min-height:48px;padding:0 var(--space-lg);border:1px solid var(--color-ink);border-radius:var(--radius-pill);background:var(--color-ink);color:var(--color-paper);font:700 var(--text-md)/1 var(--font-body);white-space:nowrap;text-decoration:none;cursor:pointer;transition:background-color var(--dur-short) var(--ease-out),transform var(--dur-micro) var(--ease-out)}
+.btn:hover{background:var(--color-ink-2)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn--quiet{min-height:44px;background:transparent;color:var(--color-ink)}
+.btn--quiet:hover{background:var(--color-paper-3)}
+.btn--quiet[aria-pressed="true"]{background:var(--color-you)}
+.btn--line{min-height:44px;background:transparent;border-color:var(--color-paper);color:var(--color-paper)}
+.btn--line:hover{background:var(--color-ink-2)}
+.btn--line:focus-visible{outline-color:var(--color-you)}
+.btn--danger{color:var(--color-error);border-color:var(--color-error)}
+.btn--danger:hover{background:var(--color-paper-3)}
+.run{min-width:150px}
 
-.layout{display:grid;gap:16px;grid-template-columns:minmax(0,1fr) 350px;grid-template-areas:"stage counter" "stage settings";align-items:start}
-.stage{grid-area:stage;min-width:0;display:grid;gap:10px}
-.counter{grid-area:counter}
-.settings{grid-area:settings}
-@media (max-width:880px){.layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"counter" "stage" "settings"}}
+/* nav */
+.nav{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:var(--space-md);min-height:var(--nav-h);padding-block:var(--space-sm)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:var(--space-2xs);padding:var(--space-2xs);border:1px solid var(--color-ink);border-radius:var(--radius-pill);justify-self:start}
+.seg button{min-height:38px;padding:0 var(--space-md);border:0;border-radius:var(--radius-pill);background:transparent;cursor:pointer;font-size:var(--text-sm);white-space:nowrap;transition:background-color var(--dur-short) var(--ease-out)}
+.seg button:hover{background:var(--color-paper-3)}
+.seg button[aria-pressed="true"]{background:var(--color-ink);color:var(--color-paper);font-weight:700}
+.wordmark{font:700 1.75rem/1 var(--font-display);letter-spacing:-0.03em;text-decoration:none}
+.status{justify-self:end;display:inline-flex;align-items:center;min-height:38px;padding:0 var(--space-md);border-radius:var(--radius-pill);background:var(--color-paper-2);font-size:var(--text-sm);font-weight:700;transition:background-color var(--dur-short) var(--ease-out)}
+.status.on{background:var(--color-you)}
 
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
-.screen{position:relative;background:var(--stage);border-radius:12px;overflow:hidden;line-height:0}
-.screen canvas{width:100%;height:auto;display:block;max-width:100%}
+/* the tally band: counted on marigold, to go on sky, the seam at percent done */
+.tally{position:relative;isolation:isolate;overflow:clip;background:var(--color-me);--seam:0%}
+.tally::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--color-you);box-shadow:inset -2px 0 0 var(--color-ink);transform:translateX(calc(var(--seam) - 100%));transition:transform var(--dur-long) var(--ease-out)}
+.tally.over::before{box-shadow:none}
+.tally__in{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:end;gap:var(--space-lg);padding-block:var(--space-xl)}
+.side{display:grid;gap:var(--space-xs);min-width:0}
+.side--to{justify-items:end;text-align:right}
+.side__label{font-size:var(--text-lead)}
+.side__big{font:700 var(--text-hero)/.88 var(--font-display);letter-spacing:var(--tracking-display);overflow-wrap:break-word;min-width:0}
+.side__big.bad{color:var(--color-error)}
+.side__meta{font-size:var(--text-sm);color:var(--color-ink-2)}
+.side__meta b{color:var(--color-ink);font-size:var(--text-md)}
+.mid{display:grid;justify-items:center;gap:var(--space-sm);text-align:center;padding-bottom:var(--space-xs);max-width:360px}
+.part{width:100%;min-width:0;border:0;border-bottom:2px solid var(--color-ink);background:transparent;padding:var(--space-2xs) 0;font:700 var(--text-title)/1.2 var(--font-display);text-align:center}
+.part:focus-visible{outline-offset:4px}
+.target{display:flex;align-items:baseline;justify-content:center;gap:var(--space-xs);font-size:var(--text-sm)}
+.target input{width:6.5ch;border:0;border-bottom:2px solid var(--color-ink);background:transparent;padding:0;font:700 var(--text-xl)/1.1 var(--font-display);text-align:center}
+.adj{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-xs)}
+.done{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);flex-wrap:wrap;background:var(--color-ink);color:var(--color-paper)}
+.done__in{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);flex-wrap:wrap;padding-block:var(--space-sm);width:100%}
+.done p{font:700 var(--text-title)/1.2 var(--font-display)}
+.done.over{background:var(--color-error)}
+
+/* workbench */
+.bench{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:var(--gap-columns);align-items:start;padding-block:var(--space-xl) var(--section-gap)}
+.stage{display:grid;gap:var(--space-md);min-width:0}
+.screen{position:relative;background:var(--color-ink);border-radius:var(--radius-card);overflow:hidden;line-height:0}
+.screen canvas{display:block;width:100%;height:auto;max-width:100%}
 .screen.roi canvas{cursor:crosshair;touch-action:none}
-.hud{position:absolute;top:10px;left:10px;line-height:1;font:700 22px var(--f-display);color:#fff;background:rgba(8,10,12,.62);padding:6px 10px;border-radius:7px;font-variant-numeric:tabular-nums}
-.hud small{font:500 12px var(--f-body);color:#c9d1d9;margin-left:4px}
-.notice{position:absolute;inset:0;display:grid;place-items:center;padding:20px;line-height:1.55;background:rgba(8,10,12,.78);color:#E6EBF0;text-align:center}
-.notice div{max-width:460px;font-size:14.5px}
-.notice b{display:block;font:600 17px var(--f-display);margin-bottom:6px;color:#F0A93A}
-.roiHint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);line-height:1.3;background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:13px;padding:6px 12px;border-radius:7px;white-space:nowrap}
-
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:500;display:inline-flex;align-items:center;gap:6px;line-height:1.2}
-.btn:hover{border-color:var(--muted)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600;min-width:132px;justify-content:center}
-.btn.primary.stop{background:var(--ink);border-color:var(--ink);color:var(--surface)}
-.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
-.btn.warn{color:var(--bad)}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.meta{margin-left:auto;font:500 12.5px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
-.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.row select{min-width:0;max-width:100%;flex:1 1 200px}
-.truth{font-size:13px;color:var(--muted);margin:0}
-.truth b{color:var(--ink);font-variant-numeric:tabular-nums}
-
-/* counter */
-.partName{width:100%;border:0;border-bottom:1px dashed var(--line);background:none;font:600 16px var(--f-body);padding:2px 0 6px;color:var(--ink)}
-.label{font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
-.big{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:8px}
-#count{font:700 clamp(64px,10vw,108px)/.9 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-#count.over{color:var(--bad)}
-.of{font:500 20px var(--f-display);color:var(--muted);display:inline-flex;align-items:baseline;gap:4px}
-.of input{width:5.2em;border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:2px 6px;font:600 20px var(--f-display);color:var(--ink);font-variant-numeric:tabular-nums}
-.bar{height:10px;border-radius:99px;background:var(--bg);border:1px solid var(--line);overflow:hidden;margin:14px 0 12px}
-.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
-.bar.done i{background:var(--good)}
-.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.metrics div{display:grid;gap:1px}
-.metrics span{font-size:12px;color:var(--muted)}
-.metrics b{font:600 18px var(--f-display);font-variant-numeric:tabular-nums}
-.done{margin-top:12px;background:var(--good);color:#fff;border-radius:8px;padding:10px 12px;font-weight:600;display:flex;justify-content:space-between;gap:8px;align-items:center}
-.done.over{background:var(--bad)}
-.adj{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.adj .btn{flex:1 1 auto;justify-content:center}
+.hud{position:absolute;top:var(--space-sm);left:var(--space-sm);display:flex;align-items:baseline;gap:var(--space-2xs);padding:var(--space-xs) var(--space-sm);border-radius:var(--radius-inner);background:var(--color-hud);color:var(--color-paper);line-height:1}
+.hud b{font:700 var(--text-xl)/1 var(--font-display);font-variant-numeric:tabular-nums}
+.hud span{font-size:var(--text-xs)}
+.notice{position:absolute;inset:0;display:grid;place-items:center;padding:var(--space-lg);background:var(--color-scrim);color:var(--color-paper);line-height:1.55;text-align:center}
+.notice div{display:grid;gap:var(--space-xs);max-width:46ch}
+.notice b{font:700 var(--text-title)/1.2 var(--font-display);color:var(--color-you)}
+.hint-pill{position:absolute;left:50%;bottom:var(--space-sm);transform:translateX(-50%);padding:var(--space-xs) var(--space-md);border-radius:var(--radius-pill);background:var(--color-you);color:var(--color-ink);font-size:var(--text-sm);font-weight:700;line-height:1.3;white-space:nowrap}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-xs)}
+.readout{margin-left:auto;display:flex;gap:var(--space-md);font-size:var(--text-sm);color:var(--color-muted);font-variant-numeric:tabular-nums}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-xs)}
+.row select{flex:1 1 220px;min-width:0}
+.truth{font-size:var(--text-sm);color:var(--color-muted)}
+.truth b{color:var(--color-ink);font-variant-numeric:tabular-nums}
 
 /* settings */
-.settings{display:grid;gap:18px}
-.group{display:grid;gap:10px}
-.group h3{margin:0;font:600 14px var(--f-display);letter-spacing:.04em;display:flex;justify-content:space-between;align-items:baseline}
-.group+.group{border-top:1px solid var(--line);padding-top:16px}
-.field{display:grid;gap:4px}
-.field>label,.fieldHead{display:flex;justify-content:space-between;font-size:13.5px;color:var(--muted);gap:8px}
-.field output{font:500 13px var(--f-mono);color:var(--ink)}
-input[type=range]{width:100%;accent-color:var(--accent)}
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.num{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:6px 8px;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-select.num{font-family:var(--f-body)}
-.dirs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.dirs button{border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:7px 0;cursor:pointer;font-size:13px;line-height:1.2}
-.dirs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
-.dirs span{display:block;font-size:18px}
-.tg{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;cursor:pointer}
-.tg input{appearance:none;width:40px;height:22px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;flex:none;transition:background .15s}
-.tg input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
-.tg input:checked{background:var(--accent)}
+.settings{display:grid;gap:var(--space-lg);padding:var(--space-lg);border-radius:var(--radius-card);background:var(--color-paper-2)}
+.group{display:grid;gap:var(--space-sm)}
+.group + .group{padding-top:var(--space-lg);border-top:1px solid var(--color-rule)}
+.group h3{font-size:var(--text-title);line-height:1.15}
+.field{display:grid;gap:var(--space-2xs)}
+.field > label{display:flex;justify-content:space-between;gap:var(--space-xs);font-size:var(--text-sm);color:var(--color-ink-2)}
+.field output{font-weight:700;color:var(--color-ink);font-variant-numeric:tabular-nums}
+.pair2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-sm)}
+.input{width:100%;min-width:0;min-height:44px;padding:0 var(--space-sm);border:1px solid var(--color-rule);border-radius:var(--radius-inner);background:var(--color-paper);font-variant-numeric:tabular-nums}
+.input:hover{border-color:var(--color-muted)}
+.input:focus-visible{outline:2px solid var(--color-focus);outline-offset:0;border-color:var(--color-focus)}
+input[type=range]{width:100%;accent-color:var(--color-ink);cursor:pointer}
+.dirs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-2xs)}
+.dirs button{display:grid;justify-items:center;gap:2px;min-height:56px;padding:var(--space-xs) 0;border:1px solid var(--color-rule);border-radius:var(--radius-inner);background:var(--color-paper);cursor:pointer;font-size:var(--text-xs);line-height:1.2;transition:background-color var(--dur-short) var(--ease-out)}
+.dirs button:hover{border-color:var(--color-ink)}
+.dirs button span{font:700 var(--text-lg)/1 var(--font-display)}
+.dirs button[aria-pressed="true"]{background:var(--color-ink);border-color:var(--color-ink);color:var(--color-paper)}
+.tg{display:flex;justify-content:space-between;align-items:center;gap:var(--space-sm);min-height:36px;font-size:var(--text-sm);cursor:pointer}
+.tg input{appearance:none;-webkit-appearance:none;position:relative;flex:none;width:44px;height:26px;margin:0;border-radius:var(--radius-pill);background:var(--color-rule);cursor:pointer;transition:background-color var(--dur-short) var(--ease-out)}
+.tg input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--color-paper);transition:transform var(--dur-short) var(--ease-out)}
+.tg input:checked{background:var(--color-ink)}
 .tg input:checked::after{transform:translateX(18px)}
-.hint{font-size:12.5px;color:var(--muted);margin:0}
-.calib{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13.5px}
-.calib b{font-family:var(--f-mono)}
+.note{font-size:var(--text-xs);color:var(--color-muted)}
+.calib{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-xs);font-size:var(--text-sm)}
+.calib b{font-variant-numeric:tabular-nums}
 
-/* history */
-.hHead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-.hHead h2,.tips h2{margin:0;font:600 17px var(--f-display)}
-.tableWrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:560px}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{font-weight:500;color:var(--muted);font-size:12.5px}
-td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
-th.n{text-align:right}
-.tag{font-size:12px;padding:2px 8px;border-radius:99px;font-weight:600}
-.tag.ok{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
-.tag.short{background:var(--accent-soft);color:var(--ink)}
-.tag.over{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
-.empty{color:var(--muted);font-size:14px;margin:4px 0}
+/* history, on ink */
+.log{background:var(--color-ink);color:var(--color-paper);padding-block:var(--space-3xl);--color-focus:var(--color-you)}
+.log__head{display:flex;justify-content:space-between;align-items:end;gap:var(--space-md);flex-wrap:wrap;margin-bottom:var(--space-xl)}
+.log__head h2{font-size:var(--text-section);line-height:1.02;letter-spacing:-0.03em}
+.log__head p{margin-top:var(--space-sm);font-size:var(--text-lead);color:var(--color-paper-3);max-width:44ch}
+.runs{display:grid;gap:var(--space-lg);margin:0;padding:0;list-style:none}
+.runs li{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:var(--gap-columns);align-items:center}
+.runs__name{display:grid;gap:2px;min-width:0}
+.runs__name b{font:700 var(--text-title)/1.15 var(--font-display)}
+.runs__name span{font-size:var(--text-sm);color:var(--color-paper-3)}
+.tag{justify-self:start;margin-top:var(--space-2xs);padding:2px var(--space-sm);border-radius:var(--radius-pill);font-size:var(--text-xs);font-weight:700;background:var(--color-paper);color:var(--color-ink)}
+.tag--over{background:var(--color-error);color:var(--color-paper)}
+.tag--short{background:var(--color-me);color:var(--color-ink)}
+.bar{display:grid;grid-template-columns:calc(var(--s) * 1%) minmax(0,1fr);min-height:64px;border-radius:var(--radius-inner);overflow:hidden;background:var(--color-me);color:var(--color-ink)}
+.bar span{display:flex;align-items:center;padding-inline:var(--space-md);font:700 var(--text-xl)/1 var(--font-display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar span:first-child{background:var(--color-you);box-shadow:inset -2px 0 0 var(--color-ink)}
+.bar span:last-child{justify-content:flex-end;padding-inline:var(--space-xs) var(--space-md);font:400 var(--text-sm)/1 var(--font-body)}
+.bar--full{grid-template-columns:minmax(0,1fr) auto;background:var(--color-you)}
+.bar--full span:first-child{box-shadow:none}
+.empty{font-size:var(--text-lead);color:var(--color-paper-3)}
 
-.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
-.tips ol,.tips ul{margin:8px 0 0;padding-left:20px;display:grid;gap:6px;font-size:14px;max-width:65ch}
-.tips code{font-family:var(--f-mono);font-size:12.5px;background:var(--bg);padding:1px 5px;border-radius:4px}
+/* setup notes, on the seam */
+.notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.notes__half{display:grid;align-content:start;gap:var(--space-lg);padding:var(--space-3xl) var(--space-2xl)}
+.notes__half--you{background:var(--color-you)}
+.notes__half--me{background:var(--color-me)}
+.notes h2{font-size:var(--text-section);line-height:1.02;letter-spacing:-0.03em;max-width:14ch}
+.notes ol,.notes ul{display:grid;gap:var(--space-sm);margin:0;padding-left:1.25em;max-width:52ch;font-size:var(--text-md)}
+.notes b{font-weight:700}
+.notes code{padding:0 var(--space-xs);border-radius:var(--radius-inner);background:var(--color-paper);font-size:var(--text-sm)}
+
+/* footer */
+.foot{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:var(--space-xl);padding-block:var(--space-2xl)}
+.foot__line{font-size:var(--text-sm);color:var(--color-ink-2)}
+.foot a:not(.wordmark){font-size:var(--text-sm)}
+.foot a:hover{text-decoration:underline}
+
+@media (max-width:60rem){
+  :root{--gutter:24px;--section-gap:80px}
+  .bench{grid-template-columns:minmax(0,1fr)}
+  .nav{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"word status" "seg seg"}
+  .nav .wordmark{grid-area:word}
+  .status{grid-area:status}
+  .seg{grid-area:seg}
+  .runs li{grid-template-columns:minmax(0,1fr);gap:var(--space-sm)}
+  .notes{grid-template-columns:minmax(0,1fr)}
+  .notes__half{padding:var(--space-2xl) var(--gutter)}
+  .foot{grid-template-columns:minmax(0,1fr);gap:var(--space-md)}
+}
+@media (max-width:40rem){
+  :root{--gutter:16px;--gap-columns:16px}
+  .tally__in{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"mid mid" "done to";row-gap:var(--space-lg)}
+  .mid{grid-area:mid;justify-self:center}
+  .side--done{grid-area:done}
+  .side--to{grid-area:to}
+  .side__big{font-size:var(--text-hero-s)}
+  .side__label{font-size:var(--text-md)}
+  .readout{margin-left:0;width:100%}
+  .seg{width:100%}
+  .seg button{flex:1 1 auto;padding:0 var(--space-sm)}
+  .tools .btn{flex:1 1 auto}
+  .bar span{font-size:var(--text-lg)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
 #vid{position:fixed;left:0;bottom:0;width:2px;height:2px;opacity:0;pointer-events:none}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
-<div class="app">
-  <header class="top">
-    <div class="brand">
-      <svg class="mark" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="8" fill="var(--ink)"/><path d="M17 7.5l7.4 4.25v8.5L17 24.5l-7.4-4.25v-8.5z" fill="none" stroke="var(--accent)" stroke-width="2.2"/><circle cx="17" cy="16" r="3" fill="var(--accent)"/><path d="M6 28h22" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/></svg>
-      <div><b>นับชิ้นงานด้วยกล้อง</b><small>นับเมื่อชิ้นงานข้ามเส้นนับ · ทำงานในเครื่อง ไม่ส่งภาพออก</small></div>
-    </div>
-    <div class="seg" id="srcSeg" role="group" aria-label="แหล่งภาพ">
-      <button data-src="demo" aria-pressed="true">ภาพจำลอง</button>
-      <button data-src="camera" aria-pressed="false">กล้องสด</button>
-      <button data-src="file" aria-pressed="false">ไฟล์วิดีโอ</button>
-    </div>
-    <span class="pill" id="status">หยุด</span>
-  </header>
+<header class="container nav">
+  <div class="seg" id="srcSeg" role="group" aria-label="แหล่งภาพ">
+    <button type="button" data-src="demo" aria-pressed="true">ภาพจำลอง</button>
+    <button type="button" data-src="camera" aria-pressed="false">กล้องสด</button>
+    <button type="button" data-src="file" aria-pressed="false">ไฟล์วิดีโอ</button>
+  </div>
+  <a class="wordmark" href="#top" id="top">Detection</a>
+  <span class="status" id="status" role="status">หยุด</span>
+</header>
 
-  <main class="layout">
-    <section class="counter card" aria-label="ยอดนับ">
-      <label class="label" for="partName">ชิ้นงาน</label>
-      <input id="partName" class="partName" type="text" autocomplete="off">
-      <div class="big">
-        <span id="count">0</span>
-        <span class="of">/ <input id="target" type="number" min="1" step="1" aria-label="จำนวนเป้าหมาย"> ชิ้น</span>
-      </div>
-      <div class="bar" id="bar"><i></i></div>
-      <div class="metrics">
-        <div><span>อัตรา (ชิ้น/นาที)</span><b id="rate">0</b></div>
-        <div><span>เวลานับ</span><b id="elapsed">00:00:00</b></div>
-        <div><span>คงเหลือ</span><b id="remain">0</b></div>
-      </div>
-      <div class="done" id="doneBanner" hidden><span id="doneText">ครบแล้ว</span><button class="btn" id="silence" type="button">รับทราบ</button></div>
+<section class="tally" id="tally" aria-label="ยอดนับ">
+  <div class="container tally__in">
+    <div class="side side--done">
+      <span class="side__label">นับได้แล้ว</span>
+      <b class="side__big num" id="count">0</b>
+      <span class="side__meta">อัตรา <b class="num" id="rate">0</b> ชิ้น/นาที</span>
+    </div>
+    <div class="mid">
+      <label class="visually-hidden" for="partName">ชื่อชิ้นงาน</label>
+      <input class="part" id="partName" type="text" autocomplete="off">
+      <p class="target"><label for="target">เป้าหมาย</label> <input id="target" class="num" type="number" min="1" step="1"> <span>ชิ้น</span></p>
       <div class="adj">
-        <button class="btn" id="minus" type="button" title="ลด 1 (ปุ่ม -)">− 1</button>
-        <button class="btn" id="plus" type="button" title="เพิ่ม 1 (ปุ่ม +)">+ 1</button>
-        <button class="btn warn" id="newBatch" type="button">บันทึกรอบ &amp; เริ่มใหม่</button>
+        <button class="btn btn--quiet" id="minus" type="button" aria-label="ลดยอด 1">−1</button>
+        <button class="btn btn--quiet" id="plus" type="button" aria-label="เพิ่มยอด 1">+1</button>
+        <button class="btn btn--quiet" id="newBatch" type="button">บันทึกล็อต แล้วเริ่มใหม่</button>
       </div>
-    </section>
+    </div>
+    <div class="side side--to">
+      <span class="side__label" id="remainLabel">เหลืออีก</span>
+      <b class="side__big num" id="remain">0</b>
+      <span class="side__meta">เวลานับ <b class="num" id="elapsed">00:00:00</b></span>
+    </div>
+  </div>
+  <div class="done" id="doneBanner" hidden>
+    <div class="container done__in">
+      <p id="doneText">ครบแล้ว</p>
+      <button class="btn btn--line" id="silence" type="button">รับทราบ</button>
+    </div>
+  </div>
+</section>
 
-    <section class="stage" aria-label="ภาพจากกล้อง">
-      <div class="screen" id="screen">
-        <canvas id="view" width="640" height="480"></canvas>
-        <div class="hud" id="hud">0<small>ชิ้น</small></div>
-        <div class="notice" id="notice" hidden><div id="noticeBody"></div></div>
-        <div class="roiHint" id="roiHint" hidden>ลากบนภาพเพื่อกำหนดพื้นที่ตรวจจับ</div>
-      </div>
-      <div class="toolbar">
-        <button class="btn primary" id="runBtn" type="button">เริ่มนับ</button>
-        <button class="btn" id="roiBtn" type="button" aria-pressed="false">กำหนดพื้นที่</button>
-        <button class="btn" id="roiFull" type="button">ทั้งภาพ</button>
-        <button class="btn" id="relearn" type="button" title="ใช้เมื่อแสงหรือพื้นหลังเปลี่ยน">เรียนรู้พื้นหลังใหม่</button>
-        <button class="btn" id="fsBtn" type="button">เต็มจอ</button>
-        <span class="meta" id="meta">— fps</span>
-      </div>
-      <div class="row" id="camRow" hidden>
-        <select id="camSel" class="num" aria-label="เลือกกล้อง"></select>
-        <button class="btn" id="camRetry" type="button">เปิดกล้องอีกครั้ง</button>
-      </div>
-      <div class="row" id="fileRow" hidden>
-        <label class="btn" for="fileIn">เลือกไฟล์วิดีโอ</label>
-        <input id="fileIn" type="file" accept="video/*" hidden>
-        <label class="btn" for="recIn">ถ่ายวิดีโอด้วยมือถือ</label>
-        <input id="recIn" type="file" accept="video/*" capture="environment" hidden>
-        <span class="hint" id="fileName"></span>
-      </div>
-      <p class="truth" id="truth">ภาพจำลอง: น็อตที่ข้ามเส้นจริง <b id="truthN">0</b> ชิ้น — เทียบกับยอดที่โปรแกรมนับได้ด้านบน</p>
-    </section>
+<main class="container bench" id="main">
+  <section class="stage" aria-label="ภาพจากกล้อง">
+    <div class="screen" id="screen">
+      <canvas id="view" width="640" height="480" aria-label="ภาพจากกล้อง พร้อมกรอบชิ้นงานที่ตรวจจับได้และเส้นนับ"></canvas>
+      <div class="hud" aria-hidden="true"><b id="hud">0</b><span>ชิ้น</span></div>
+      <div class="notice" id="notice" hidden><div id="noticeBody"></div></div>
+      <div class="hint-pill" id="roiHint" hidden>ลากบนภาพเพื่อกำหนดพื้นที่ตรวจจับ</div>
+    </div>
+    <div class="tools">
+      <button class="btn run" id="runBtn" type="button">เริ่มนับ</button>
+      <button class="btn btn--quiet" id="roiBtn" type="button" aria-pressed="false">กำหนดพื้นที่</button>
+      <button class="btn btn--quiet" id="roiFull" type="button">ทั้งภาพ</button>
+      <button class="btn btn--quiet" id="relearn" type="button">เรียนรู้พื้นหลังใหม่</button>
+      <button class="btn btn--quiet" id="fsBtn" type="button">เต็มจอ</button>
+      <span class="readout"><span id="fps">0 fps</span><span id="inView">ในภาพ 0</span></span>
+    </div>
+    <div class="row" id="camRow" hidden>
+      <label class="visually-hidden" for="camSel">เลือกกล้อง</label>
+      <select id="camSel" class="input"></select>
+      <button class="btn btn--quiet" id="camRetry" type="button">เปิดกล้องอีกครั้ง</button>
+    </div>
+    <div class="row" id="fileRow" hidden>
+      <label class="btn btn--quiet" for="fileIn">เลือกไฟล์วิดีโอ</label>
+      <input id="fileIn" type="file" accept="video/*" hidden>
+      <label class="btn btn--quiet" for="recIn">ถ่ายวิดีโอด้วยมือถือ</label>
+      <input id="recIn" type="file" accept="video/*" capture="environment" hidden>
+      <span class="note" id="fileName"></span>
+    </div>
+    <p class="truth" id="truth">ในภาพจำลอง มีน็อตข้ามเส้นจริง <b id="truthN">0</b> ชิ้น เทียบกับยอดที่นับได้ด้านบน</p>
+  </section>
 
-    <section class="settings card" aria-label="การตั้งค่า">
-      <div class="group">
-        <h3>ทิศทางและเส้นนับ</h3>
-        <div class="dirs" id="dirs">
-          <button type="button" data-dir="down"><span>↓</span>บน→ล่าง</button>
-          <button type="button" data-dir="up"><span>↑</span>ล่าง→บน</button>
-          <button type="button" data-dir="right"><span>→</span>ซ้าย→ขวา</button>
-          <button type="button" data-dir="left"><span>←</span>ขวา→ซ้าย</button>
-        </div>
-        <div class="field"><label for="line">ตำแหน่งเส้นนับ <output data-out="line"></output></label><input id="line" data-k="line" type="range" min="0.1" max="0.9" step="0.01"></div>
+  <aside class="settings" aria-label="การตั้งค่า">
+    <div class="group">
+      <h3>ทิศทางและเส้นนับ</h3>
+      <div class="dirs" id="dirs" role="group" aria-label="ทิศทางที่ชิ้นงานไหล">
+        <button type="button" data-dir="down"><span>↓</span>บนลงล่าง</button>
+        <button type="button" data-dir="up"><span>↑</span>ล่างขึ้นบน</button>
+        <button type="button" data-dir="right"><span>→</span>ซ้ายไปขวา</button>
+        <button type="button" data-dir="left"><span>←</span>ขวาไปซ้าย</button>
       </div>
+      <div class="field"><label for="line">ตำแหน่งเส้นนับ <output data-out="line"></output></label><input id="line" data-k="line" type="range" min="0.1" max="0.9" step="0.01"></div>
+    </div>
 
-      <div class="group">
-        <h3>การตรวจจับ</h3>
-        <div class="field"><label for="mode">วิธีแยกชิ้นงานจากพื้นหลัง</label>
-          <select id="mode" class="num">
-            <option value="auto">อัตโนมัติ — เรียนรู้พื้นหลัง</option>
-            <option value="dark">ชิ้นงานเข้ม บนพื้นสว่าง</option>
-            <option value="light">ชิ้นงานสว่าง บนพื้นเข้ม</option>
-          </select></div>
-        <div class="field" id="sensField"><label for="sens">ความต่างขั้นต่ำ (ยิ่งน้อยยิ่งไว) <output data-out="sens"></output></label><input id="sens" data-k="sens" type="range" min="8" max="90" step="1"></div>
-        <div class="field" id="thrField"><label for="thr">ระดับความสว่างตัดสิน <output data-out="thr"></output></label><input id="thr" data-k="thr" type="range" min="10" max="245" step="1"></div>
-        <div class="pair">
-          <div class="field"><label for="minA">ขนาดเล็กสุด (px)</label><input id="minA" data-k="minA" class="num" type="number" min="1" step="1"></div>
-          <div class="field"><label for="maxA">ขนาดใหญ่สุด (px)</label><input id="maxA" data-k="maxA" class="num" type="number" min="10" step="10"></div>
-        </div>
-        <div class="field"><label for="maxDist">ระยะเคลื่อนสูงสุดต่อเฟรม <output data-out="maxDist"></output></label><input id="maxDist" data-k="maxDist" type="range" min="10" max="160" step="1"></div>
-        <label class="tg">แสดงพื้นที่ที่ตรวจจับได้ (สีส้ม)<input type="checkbox" data-k="mask" id="mask"></label>
-        <p class="hint">ขนาดวัดที่ความละเอียดประมวลผล 320 px กว้าง ใช้ค่า “ในภาพ” ด้านล่างกล้องช่วยดูว่าจับได้ครบหรือไม่</p>
+    <div class="group">
+      <h3>การตรวจจับ</h3>
+      <div class="field"><label for="mode">แยกชิ้นงานจากพื้นหลังด้วย</label>
+        <select id="mode" class="input">
+          <option value="auto">เรียนรู้พื้นหลังอัตโนมัติ</option>
+          <option value="dark">ชิ้นงานเข้ม บนพื้นสว่าง</option>
+          <option value="light">ชิ้นงานสว่าง บนพื้นเข้ม</option>
+        </select></div>
+      <div class="field" id="sensField"><label for="sens">ความต่างขั้นต่ำ ยิ่งน้อยยิ่งไว <output data-out="sens"></output></label><input id="sens" data-k="sens" type="range" min="8" max="90" step="1"></div>
+      <div class="field" id="thrField"><label for="thr">ระดับความสว่างที่ใช้ตัดสิน <output data-out="thr"></output></label><input id="thr" data-k="thr" type="range" min="10" max="245" step="1"></div>
+      <div class="pair2">
+        <div class="field"><label for="minA">ขนาดเล็กสุด (px)</label><input id="minA" data-k="minA" class="input" type="number" min="1" step="1"></div>
+        <div class="field"><label for="maxA">ขนาดใหญ่สุด (px)</label><input id="maxA" data-k="maxA" class="input" type="number" min="10" step="10"></div>
       </div>
+      <div class="field"><label for="maxDist">ระยะเคลื่อนสูงสุดต่อเฟรม <output data-out="maxDist"></output></label><input id="maxDist" data-k="maxDist" type="range" min="10" max="160" step="1"></div>
+      <label class="tg" for="mask">แสดงพื้นที่ที่ตรวจจับได้<input type="checkbox" data-k="mask" id="mask"></label>
+      <p class="note">ขนาดวัดที่ภาพกว้าง 320 px ดูค่า “ในภาพ” ใต้กล้องว่าจับได้ครบหรือไม่</p>
+    </div>
 
-      <div class="group">
-        <h3>ชิ้นงานที่ไหลติดกัน</h3>
-        <label class="tg">แยกนับตามขนาดก้อน<input type="checkbox" data-k="split" id="split"></label>
-        <div class="calib"><span>ขนาด 1 ชิ้น: <b id="singleOut">—</b></span><button class="btn" id="calib" type="button">เรียนรู้ขนาด 1 ชิ้น</button></div>
-        <p class="hint" id="calibHint">ปล่อยชิ้นงานแบบไม่ติดกันผ่านเส้นอย่างน้อย 5 ชิ้น แล้วกดเรียนรู้ ก้อนที่ใหญ่ราว 2 เท่าจะนับเป็น 2 ชิ้น</p>
+    <div class="group">
+      <h3>ชิ้นงานที่ไหลติดกัน</h3>
+      <label class="tg" for="split">แยกนับตามขนาดก้อน<input type="checkbox" data-k="split" id="split"></label>
+      <div class="calib"><span>ขนาด 1 ชิ้น <b id="singleOut">ยังไม่ได้เรียนรู้</b></span><button class="btn btn--quiet" id="calib" type="button">เรียนรู้ขนาด 1 ชิ้น</button></div>
+      <p class="note" id="calibHint">ปล่อยชิ้นงานแบบไม่ติดกันผ่านเส้นอย่างน้อย 5 ชิ้น แล้วกดเรียนรู้</p>
+    </div>
+
+    <div class="group">
+      <h3>เมื่อครบเป้าหมาย</h3>
+      <label class="tg" for="sound">เสียงเตือน<input type="checkbox" data-k="sound" id="sound"></label>
+      <label class="tg" for="stopAt">หยุดนับอัตโนมัติ<input type="checkbox" data-k="stopAt" id="stopAt"></label>
+    </div>
+  </aside>
+</main>
+
+<section class="log" aria-labelledby="log-h">
+  <div class="container">
+    <div class="log__head">
+      <div>
+        <h2 id="log-h">ทุกล็อตที่นับ</h2>
+        <p>สีเหลืองคือที่นับได้ สีฟ้าคือส่วนที่ยังขาดจากเป้าหมาย</p>
       </div>
-
-      <div class="group">
-        <h3>เมื่อครบเป้าหมาย</h3>
-        <label class="tg">เสียงเตือน<input type="checkbox" data-k="sound" id="sound"></label>
-        <label class="tg">หยุดนับอัตโนมัติ<input type="checkbox" data-k="stopAt" id="stopAt"></label>
-      </div>
-    </section>
-  </main>
-
-  <section class="card" aria-label="ประวัติการนับ">
-    <div class="hHead">
-      <h2>ประวัติรอบการนับ</h2>
       <div class="row">
-        <button class="btn" id="copyHist" type="button">คัดลอกไปวางใน Excel</button>
-        <button class="btn warn" id="clearHist" type="button">ล้างประวัติ</button>
+        <button class="btn btn--line" id="copyHist" type="button">คัดลอกไปวางใน Excel</button>
+        <button class="btn btn--line" id="clearHist" type="button">ล้างประวัติ</button>
       </div>
     </div>
-    <div class="tableWrap"><table>
-      <thead><tr><th>เวลาจบรอบ</th><th>ชิ้นงาน</th><th class="n">นับได้</th><th class="n">เป้าหมาย</th><th>สถานะ</th><th class="n">ใช้เวลา</th></tr></thead>
-      <tbody id="histBody"></tbody>
-    </table></div>
-    <p class="empty" id="histEmpty">ยังไม่มีรอบที่บันทึก กด “บันทึกรอบ &amp; เริ่มใหม่” เมื่อจบแต่ละล็อต</p>
-  </section>
+    <ul class="runs" id="histBody"></ul>
+    <p class="empty" id="histEmpty">ยังไม่มีล็อตที่บันทึก กด “บันทึกล็อต แล้วเริ่มใหม่” เมื่อจบแต่ละล็อต</p>
+  </div>
+</section>
 
-  <section class="tips">
-    <div class="card">
-      <h2>ตั้งค่าให้นับแม่น</h2>
-      <ol>
-        <li>ยึดกล้องให้นิ่ง มองลงตั้งฉากกับทางไหล ห้ามขยับระหว่างนับ</li>
-        <li>ใช้พื้นหลังสีตัดกับชิ้นงาน เช่น น็อตชุบซิงค์บนพื้นดำด้าน หรือน็อตดำบนพื้นขาวด้าน และให้แสงสม่ำเสมอ ไม่มีเงาแข็ง</li>
-        <li>กด “กำหนดพื้นที่” ลากเฉพาะช่วงรางที่ชิ้นงานวิ่ง ตัดขอบรางและมือคนออก</li>
-        <li>เปิด “แสดงพื้นที่ที่ตรวจจับได้” แล้วปรับความไวจนชิ้นงานเป็นก้อนส้มเต็มตัว และพื้นว่างไม่มีจุดรบกวน</li>
-        <li>ชิ้นงานควรเลื่อนไม่เกินประมาณ 1/5 ของภาพต่อเฟรม ถ้าไหลเร็วมากให้ลดความเร็วรางหรือใช้กล้องเฟรมเรตสูง</li>
-        <li>ก่อนใช้งานจริง ปล่อยชิ้นงานที่นับมือไว้แล้ว 100–200 ชิ้น เทียบผลแล้วจูนค่าจนตรง</li>
-      </ol>
-    </div>
-    <div class="card">
-      <h2>เปิดใช้กล้องสด</h2>
-      <ul>
-        <li><b>ในหน้าต่าง Claude</b> เบราว์เซอร์ไม่อนุญาตให้หน้าเว็บเปิดกล้องสด ใช้ “ไฟล์วิดีโอ” หรือ “ถ่ายวิดีโอด้วยมือถือ” แทนได้</li>
-        <li><b>บนคอมพิวเตอร์</b> ดาวน์โหลดไฟล์ <code>part-counter.html</code> แล้วดับเบิลคลิกเปิดใน Chrome หรือ Edge ใช้ได้ทั้งเว็บแคมและกล้อง USB</li>
-        <li><b>บนมือถือ</b> กล้องต้องเปิดผ่าน https ให้อัปโหลดไฟล์ขึ้น GitHub Pages หรือ Netlify Drop แล้วเปิดลิงก์นั้น เลือกกล้องหลังได้จากเมนูใต้ภาพ</li>
-        <li>ระหว่างนับ หน้าจอจะไม่ดับเอง และยอดนับถูกเก็บไว้ในเครื่อง ถ้าเผลอปิดหน้า เปิดใหม่ยอดยังอยู่</li>
-      </ul>
-    </div>
-  </section>
-</div>
-<video id="vid" muted playsinline></video>
+<section class="notes" aria-label="วิธีตั้งค่า">
+  <div class="notes__half notes__half--you">
+    <h2>ตั้งกล้องให้นับแม่น</h2>
+    <ol>
+      <li>ยึดกล้องให้นิ่ง มองลงตั้งฉากกับราง</li>
+      <li>ใช้พื้นสีตัดกับชิ้นงาน แสงสม่ำเสมอ ไม่มีเงาแข็ง</li>
+      <li>กำหนดพื้นที่ให้ครอบเฉพาะช่วงรางที่ชิ้นงานวิ่ง</li>
+      <li>เปิด “แสดงพื้นที่ที่ตรวจจับได้” แล้วปรับความไวจนชิ้นงานเป็นก้อนเต็มตัว</li>
+      <li>ทดลองกับชิ้นงานที่นับมือไว้ 100 ถึง 200 ชิ้น แล้วจูนจนยอดตรง</li>
+    </ol>
+  </div>
+  <div class="notes__half notes__half--me">
+    <h2>เปิดกล้องสด</h2>
+    <ul>
+      <li><b>คอมพิวเตอร์</b> เปิดลิงก์ GitHub Pages หรือดับเบิลคลิกไฟล์ <code>index.html</code> ใน Chrome หรือ Edge</li>
+      <li><b>มือถือ</b> เปิดลิงก์ GitHub Pages (https) แล้วเลือกกล้องหลังจากเมนูใต้ภาพ</li>
+      <li><b>ในหน้าต่าง Claude</b> กล้องสดถูกปิดไว้ ใช้ “ไฟล์วิดีโอ” แทนได้</li>
+      <li>ยอดนับเก็บไว้ในเครื่อง ปิดหน้าแล้วเปิดใหม่ยอดยังอยู่</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="container foot">
+  <a class="wordmark" href="#top">Detection</a>
+  <p class="foot__line">นับชิ้นงานที่ไหลผ่านกล้อง ประมวลผลในเครื่อง ไม่ส่งภาพออกไปไหน</p>
+  <a href="https://github.com/Jittrakan-K/detection">ซอร์สโค้ดบน GitHub</a>
+</footer>
+<video id="vid" muted playsinline poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></video>
 
 <script>
 (() => {
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const KEY = 'partcount.v1';
-const AMBER = '#F0A93A', GREEN = '#4ADE80';
+const rootCS = getComputedStyle(document.documentElement);
+const tok = n => rootCS.getPropertyValue(n).trim();
+const C = {you: tok('--color-you'), me: tok('--color-me'), ink: tok('--color-ink'), paper: tok('--color-paper'),
+  belt: tok('--sim-belt'), rail: tok('--sim-rail'), rivet: tok('--sim-rivet'), steel: tok('--sim-steel'),
+  thread: tok('--sim-thread'), head: tok('--sim-head'), hi: tok('--sim-hi')};
+const hexRGB = h => { const m = /^#?([0-9a-f]{6})$/i.exec(h || ''); const v = m ? parseInt(m[1], 16) : 0xF7BE58; return [v >> 16 & 255, v >> 8 & 255, v & 255]; };
+const YOU_RGB = hexRGB(C.you);
+const FONT_D = tok('--font-display') || 'sans-serif';
 const DEF = {part:'น็อตตัวผู้ M6', target:1000, dir:'down', line:0.55, roi:{x:0.09,y:0.03,w:0.82,h:0.94},
   mode:'auto', sens:28, thr:120, minA:30, maxA:6000, split:false, single:0, maxDist:50, mask:false, sound:true, stopAt:false};
 let saved = null;
@@ -331,7 +422,7 @@ const Demo = {
     const y = y0 == null ? -70 : y0; let x, tries = 0;
     do { x = 110 + Math.random()*420; tries++; } while (tries < 10 && this.bolts.some(b => Math.abs(b.x-x) < 80 && Math.abs(b.y-y) < 120));
     const v = 105 + Math.random()*50, a = Math.random()*Math.PI;
-    if (Math.random() < 0.09) { // touching pair
+    if (Math.random() < 0.09) {
       this.bolts.push({x, y, v, a, spin:0, ln:false});
       this.bolts.push({x:x+20, y:y+6, v, a:a+0.35, spin:0, ln:false});
     } else this.bolts.push({x, y, v, a, spin:(Math.random()-.5)*0.7, ln:false});
@@ -349,27 +440,27 @@ const Demo = {
   },
   draw(){
     const g = this.ctx;
-    g.fillStyle = '#D5D9DD'; g.fillRect(0,0,640,480);
-    g.fillStyle = '#2B3036'; g.fillRect(0,0,48,480); g.fillRect(592,0,48,480);
-    g.fillStyle = '#4A5058'; for (let y = 20; y < 480; y += 60) { g.beginPath(); g.arc(24,y,4,0,7); g.arc(616,y,4,0,7); g.fill(); }
+    g.fillStyle = C.belt; g.fillRect(0,0,640,480);
+    g.fillStyle = C.rail; g.fillRect(0,0,48,480); g.fillRect(592,0,48,480);
+    g.fillStyle = C.rivet; for (let y = 20; y < 480; y += 60) { g.beginPath(); g.arc(24,y,4,0,7); g.arc(616,y,4,0,7); g.fill(); }
     for (const b of this.bolts) this.bolt(g, b);
   },
   bolt(g, b){
     g.save(); g.translate(b.x, b.y); g.rotate(b.a);
-    g.fillStyle = '#5A5F66'; g.fillRect(-22,-6,56,12);
-    g.strokeStyle = '#3B4046'; g.lineWidth = 1.3; g.beginPath();
+    g.fillStyle = C.steel; g.fillRect(-22,-6,56,12);
+    g.strokeStyle = C.thread; g.lineWidth = 1.3; g.beginPath();
     for (let s = -18; s < 32; s += 4) { g.moveTo(s,-6); g.lineTo(s+2.5,6); } g.stroke();
-    g.fillStyle = '#3F444A'; g.beginPath();
+    g.fillStyle = C.head; g.beginPath();
     for (let k = 0; k < 6; k++) { const t = k*Math.PI/3; g.lineTo(-32+Math.cos(t)*14, Math.sin(t)*14); }
     g.closePath(); g.fill();
-    g.fillStyle = '#6B7179'; g.beginPath(); g.arc(-32,0,6,0,7); g.fill();
+    g.fillStyle = C.hi; g.beginPath(); g.arc(-32,0,6,0,7); g.fill();
     g.restore();
   }
 };
 Demo.init();
 
-/* ---------- vision state ---------- */
-let pw = 0, ph = 0, gray, bg, mask, mask2, tmp, labels, stack, maskImg, bgInit = false, learn = 0;
+/* ---------- vision ---------- */
+let pw = 0, ph = 0, bg, mask, mask2, tmp, labels, stack, maskImg, bgInit = false, learn = 0;
 let tracks = [], nid = 1, flashes = [], lastBlobs = [], recent = [], times = [];
 function alloc(w, h){
   pw = w; ph = h; const n = w*h;
@@ -408,12 +499,10 @@ function process(src, sw, sh){
   }
   bgInit = true;
   if (auto && learning) { learn--; mask.fill(0); }
-  // dilate 3x3 to join fragments
   for (let y = 0; y < h; y++) { const o = y*w;
     for (let x = 0; x < w; x++) { const i = o+x; tmp[i] = mask[i] | (x > 0 ? mask[i-1] : 0) | (x < w-1 ? mask[i+1] : 0); } }
   for (let y = 0; y < h; y++) { const o = y*w;
     for (let x = 0; x < w; x++) { const i = o+x; mask2[i] = tmp[i] | (y > 0 ? tmp[i-w] : 0) | (y < h-1 ? tmp[i+w] : 0); } }
-  // connected components inside ROI
   labels.fill(0); let L = 0; const blobs = [];
   for (let y = r.y0; y < r.y1; y++) for (let x = r.x0; x < r.x1; x++) {
     const i = y*w + x;
@@ -487,17 +576,19 @@ function checkTarget(){
   } else if (!hit) { st.reached = false; st.ack = false; }
 }
 function renderCount(){
-  const c = st.count, t = Math.max(1, S.target);
+  const c = st.count, t = Math.max(1, S.target), over = c > t;
   $('#count').textContent = fmt(c);
-  $('#count').classList.toggle('over', c > t);
-  $('#hud').firstChild.nodeValue = fmt(c);
-  const bar = $('#bar'); bar.querySelector('i').style.width = Math.min(100, c/t*100) + '%';
-  bar.classList.toggle('done', c >= t);
-  $('#remain').textContent = c >= t ? (c > t ? '+' + fmt(c - t) : '0') : fmt(t - c);
+  $('#hud').textContent = fmt(c);
+  const tally = $('#tally');
+  tally.style.setProperty('--seam', Math.min(100, c/t*100).toFixed(2) + '%');
+  tally.classList.toggle('over', c >= t);
+  $('#remainLabel').textContent = over ? 'เกินเป้าหมาย' : 'เหลืออีก';
+  $('#remain').textContent = over ? '+' + fmt(c - t) : fmt(t - c);
+  $('#remain').classList.toggle('bad', over);
   const db = $('#doneBanner');
   db.hidden = !(c >= t) || st.ack;
-  db.classList.toggle('over', c > t);
-  $('#doneText').textContent = c > t ? `เกินเป้าหมาย ${fmt(c - t)} ชิ้น (ครบ ${fmt(t)} แล้ว)` : `ครบ ${fmt(t)} ชิ้นแล้ว`;
+  db.classList.toggle('over', over);
+  $('#doneText').textContent = over ? `เกินเป้าหมาย ${fmt(c - t)} ชิ้น` : `ครบ ${fmt(t)} ชิ้นแล้ว`;
 }
 function renderMetrics(){
   const now = performance.now();
@@ -527,10 +618,10 @@ function alarm(){
 function notice(title, body){
   const n = $('#notice');
   if (!title) { n.hidden = true; return; }
-  $('#noticeBody').innerHTML = '';
+  const box = $('#noticeBody'); box.textContent = '';
   const b = document.createElement('b'); b.textContent = title;
   const p = document.createElement('span'); p.textContent = body || '';
-  $('#noticeBody').append(b, p); n.hidden = false;
+  box.append(b, p); n.hidden = false;
 }
 function stopStream(){ if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } video.srcObject = null; }
 async function startCamera(deviceId){
@@ -538,11 +629,11 @@ async function startCamera(deviceId){
   const inFrame = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     notice('เปิดกล้องไม่ได้', !window.isSecureContext
-      ? 'กล้องต้องเปิดผ่าน https หรือเปิดไฟล์ในเครื่องโดยตรง อัปโหลดไฟล์ขึ้น GitHub Pages หรือ Netlify Drop แล้วเปิดลิงก์ใหม่'
+      ? 'กล้องต้องเปิดผ่าน https ให้เปิดผ่านลิงก์ GitHub Pages หรือเปิดไฟล์ในเครื่องโดยตรง'
       : 'เบราว์เซอร์นี้ไม่รองรับกล้อง ลองใช้ Chrome, Edge หรือ Safari รุ่นใหม่');
     return false;
   }
-  notice('กำลังเปิดกล้อง…', 'ถ้ามีหน้าต่างขออนุญาต ให้กด “อนุญาต”');
+  notice('กำลังเปิดกล้อง', 'ถ้ามีหน้าต่างขออนุญาต ให้กด “อนุญาต”');
   try {
     const v = deviceId ? {deviceId:{exact:deviceId}, width:{ideal:1280}, height:{ideal:720}}
                        : {facingMode:{ideal:'environment'}, width:{ideal:1280}, height:{ideal:720}};
@@ -554,10 +645,10 @@ async function startCamera(deviceId){
     return true;
   } catch (e) {
     const name = e && e.name;
-    if (inFrame) notice('กล้องสดใช้ในหน้าต่างนี้ไม่ได้', 'หน้านี้เปิดอยู่ในกรอบของ Claude ซึ่งไม่อนุญาตให้ใช้กล้อง ดาวน์โหลดไฟล์ part-counter.html แล้วเปิดในเบราว์เซอร์โดยตรง หรือเลือก “ไฟล์วิดีโอ” เพื่อนับจากคลิปที่ถ่ายไว้');
-    else if (name === 'NotAllowedError') notice('ไม่ได้รับอนุญาตให้ใช้กล้อง', 'กดไอคอนกล้องหรือแม่กุญแจที่แถบที่อยู่ เลือก “อนุญาต” แล้วกด “เปิดกล้องอีกครั้ง”');
+    if (inFrame && name === 'NotAllowedError') notice('กล้องสดใช้ในหน้าต่างนี้ไม่ได้', 'หน้านี้เปิดอยู่ในกรอบที่ไม่อนุญาตให้ใช้กล้อง เปิดผ่านลิงก์ GitHub Pages แทน หรือเลือก “ไฟล์วิดีโอ” เพื่อนับจากคลิป');
+    else if (name === 'NotAllowedError') notice('ไม่ได้รับอนุญาตให้ใช้กล้อง', 'กดไอคอนแม่กุญแจที่แถบที่อยู่ เลือก “อนุญาต” กล้อง แล้วกด “เปิดกล้องอีกครั้ง”');
     else if (name === 'NotFoundError' || name === 'OverconstrainedError') notice('ไม่พบกล้อง', 'ตรวจว่าต่อกล้องแล้ว หรือเลือกกล้องตัวอื่นจากเมนูใต้ภาพ');
-    else if (name === 'NotReadableError') notice('กล้องถูกใช้งานอยู่', 'ปิดโปรแกรมอื่นที่ใช้กล้องอยู่ เช่น Zoom หรือ Line แล้วกด “เปิดกล้องอีกครั้ง”');
+    else if (name === 'NotReadableError') notice('กล้องถูกใช้งานอยู่', 'ปิดโปรแกรมอื่นที่ใช้กล้อง เช่น Zoom หรือ Line แล้วกด “เปิดกล้องอีกครั้ง”');
     else notice('เปิดกล้องไม่ได้', (e && e.message) || 'ลองโหลดหน้าใหม่');
     return false;
   }
@@ -566,14 +657,14 @@ async function listCams(){
   try {
     const devs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
     const sel = $('#camSel'), cur = stream && stream.getVideoTracks()[0] && stream.getVideoTracks()[0].getSettings().deviceId;
-    sel.innerHTML = '';
+    sel.textContent = '';
     devs.forEach((d, i) => { const o = document.createElement('option'); o.value = d.deviceId; o.textContent = d.label || ('กล้อง ' + (i+1)); if (d.deviceId === cur) o.selected = true; sel.append(o); });
   } catch (e) {}
 }
 async function setSource(s){
   setRunning(false);
   stopStream();
-  if (s !== 'file') { video.removeAttribute('src'); }
+  if (s !== 'file') video.removeAttribute('src');
   source = s;
   $$('#srcSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.src === s)));
   $('#camRow').hidden = s !== 'camera';
@@ -583,7 +674,7 @@ async function setSource(s){
   if (s === 'camera') await startCamera();
   if (s === 'file') {
     if (fileURL) { video.srcObject = null; video.src = fileURL; }
-    else notice('เลือกวิดีโอที่จะนับ', 'กด “เลือกไฟล์วิดีโอ” หรือ “ถ่ายวิดีโอด้วยมือถือ” ใต้ภาพ ถ่ายให้กล้องนิ่ง เห็นรางที่ชิ้นงานไหลผ่าน');
+    else notice('เลือกวิดีโอที่จะนับ', 'กด “เลือกไฟล์วิดีโอ” หรือ “ถ่ายวิดีโอด้วยมือถือ” ใต้ภาพ ถ่ายให้กล้องนิ่งและเห็นรางที่ชิ้นงานไหลผ่าน');
   }
 }
 function loadFile(f){
@@ -595,7 +686,7 @@ function loadFile(f){
   pw = 0; tracks = []; notice(null);
   video.onloadeddata = () => { try { video.currentTime = 0.001; } catch (e) {} };
 }
-video.addEventListener('ended', () => { if (source === 'file') { setRunning(false); notice('วิดีโอจบแล้ว', 'ยอดที่นับได้: ' + fmt(st.count) + ' ชิ้น กด “เริ่มนับ” เพื่อเล่นซ้ำจากต้น (ยอดจะนับต่อ)'); } });
+video.addEventListener('ended', () => { if (source === 'file') { setRunning(false); notice('วิดีโอจบแล้ว', 'นับได้ ' + fmt(st.count) + ' ชิ้น กด “เริ่มนับ” เพื่อเล่นซ้ำจากต้น ยอดจะนับต่อ'); } });
 
 function srcEl(){
   if (source === 'demo') return Demo.c;
@@ -608,14 +699,13 @@ async function setRunning(on){
   if (on && source === 'file') {
     if (!fileURL) { notice('ยังไม่ได้เลือกวิดีโอ', 'เลือกไฟล์วิดีโอก่อน แล้วกด “เริ่มนับ”'); return; }
     if (video.ended) video.currentTime = 0;
-    notice(null);
     try { await video.play(); } catch (e) {}
   }
   if (!on && source === 'file') video.pause();
   running = on;
   if (on) notice(null);
   if (on && !st.batchStart) st.batchStart = Date.now();
-  const b = $('#runBtn'); b.textContent = on ? 'หยุดชั่วคราว' : 'เริ่มนับ'; b.classList.toggle('stop', on);
+  $('#runBtn').textContent = on ? 'หยุดชั่วคราว' : 'เริ่มนับ';
   const p = $('#status'); p.textContent = on ? 'กำลังนับ' : 'หยุด'; p.classList.toggle('on', on);
   if (on) { try { if ('wakeLock' in navigator && !wake) { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => wake = null); } } catch (e) {} }
   else if (wake) { try { wake.release(); } catch (e) {} wake = null; }
@@ -625,52 +715,54 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 
 /* ---------- drawing ---------- */
 let drag = null, roiMode = false;
+function strokeBox(c, x, y, w, h, col, lw){
+  c.strokeStyle = C.ink; c.lineWidth = lw + 2; c.strokeRect(x, y, w, h);
+  c.strokeStyle = col; c.lineWidth = lw; c.strokeRect(x, y, w, h);
+}
 function overlay(dw, dh){
   const c = vctx, R = drag ? normRect(drag) : S.roi;
-  const rx = R.x*dw, ry = R.y*dh, rw = R.w*dw, rh = R.h*dh, lw = Math.max(2, dw/300);
+  const rx = R.x*dw, ry = R.y*dh, rw = R.w*dw, rh = R.h*dh, lw = Math.max(2, dw/320);
   c.save();
   if (S.mask && pw && mask2) {
     const md = maskImg.data;
-    for (let i = 0, j = 0; i < mask2.length; i++, j += 4) { md[j] = 240; md[j+1] = 169; md[j+2] = 58; md[j+3] = mask2[i] ? 170 : 0; }
+    for (let i = 0, j = 0; i < mask2.length; i++, j += 4) { md[j] = YOU_RGB[0]; md[j+1] = YOU_RGB[1]; md[j+2] = YOU_RGB[2]; md[j+3] = mask2[i] ? 170 : 0; }
     mctx.putImageData(maskImg, 0, 0);
     c.imageSmoothingEnabled = false; c.drawImage(maskC, 0, 0, dw, dh); c.imageSmoothingEnabled = true;
   }
-  c.fillStyle = 'rgba(8,10,12,.5)'; c.beginPath(); c.rect(0,0,dw,dh); c.rect(rx,ry,rw,rh); c.fill('evenodd');
-  c.setLineDash([6,5]); c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 1.5; c.strokeRect(rx+.5, ry+.5, rw, rh); c.setLineDash([]);
-  // counting line
+  c.globalAlpha = 0.5; c.fillStyle = C.ink; c.beginPath(); c.rect(0,0,dw,dh); c.rect(rx,ry,rw,rh); c.fill('evenodd'); c.globalAlpha = 1;
+  c.setLineDash([6,5]); c.strokeStyle = C.paper; c.lineWidth = 1.5; c.strokeRect(rx+.5, ry+.5, rw, rh); c.setLineDash([]);
   const vert = S.dir === 'down' || S.dir === 'up';
-  c.strokeStyle = AMBER; c.lineWidth = lw*1.4; c.beginPath();
   let lx, ly;
+  c.lineWidth = lw*1.6; c.strokeStyle = C.you; c.beginPath();
   if (vert) { ly = (S.dir === 'down' ? S.line : 1 - S.line)*dh; c.moveTo(rx, ly); c.lineTo(rx+rw, ly); lx = rx + 8; }
   else { lx = (S.dir === 'right' ? S.line : 1 - S.line)*dw; c.moveTo(lx, ry); c.lineTo(lx, ry+rh); ly = ry + 8; }
   c.stroke();
   const arrow = {down:'↓', up:'↑', right:'→', left:'←'}[S.dir];
   const fs = Math.max(13, dw/45);
-  c.font = `600 ${fs}px "IBM Plex Sans Thai", system-ui, sans-serif`;
-  const lbl = 'เส้นนับ ' + arrow, tw = c.measureText(lbl).width;
-  const bx = vert ? lx : lx + 6, by = vert ? ly - fs*1.6 - 4 : ly;
-  c.fillStyle = AMBER; c.fillRect(bx, by, tw + 12, fs*1.6);
-  c.fillStyle = '#1E1400'; c.textBaseline = 'middle'; c.fillText(lbl, bx + 6, by + fs*0.8);
-  // detections
+  c.font = `700 ${fs}px ${FONT_D}`;
+  const lbl = 'เส้นนับ ' + arrow, tw = c.measureText(lbl).width, bh = fs*1.7;
+  const bx = vert ? lx : lx + 6, by = vert ? ly - bh - 6 : ly;
+  c.fillStyle = C.you; c.beginPath(); c.roundRect ? c.roundRect(bx, by, tw + 20, bh, bh/2) : c.rect(bx, by, tw + 20, bh); c.fill();
+  c.fillStyle = C.ink; c.textBaseline = 'middle'; c.fillText(lbl, bx + 10, by + bh/2);
   if (pw) {
     const k = dw / pw;
     for (const t of tracks) {
       if (!t.b) continue; const b = t.b;
-      c.strokeStyle = t.counted ? AMBER : GREEN; c.lineWidth = lw;
-      c.strokeRect(b.x0*k, b.y0*k, (b.x1 - b.x0 + 1)*k, (b.y1 - b.y0 + 1)*k);
+      strokeBox(c, b.x0*k, b.y0*k, (b.x1 - b.x0 + 1)*k, (b.y1 - b.y0 + 1)*k, t.counted ? C.you : C.me, lw);
       if (t.counted && t.units > 1) {
-        c.fillStyle = AMBER; c.fillRect(b.x0*k, b.y0*k - fs*1.4, fs*2.4, fs*1.4);
-        c.fillStyle = '#1E1400'; c.fillText('×' + t.units, b.x0*k + 4, b.y0*k - fs*0.7);
+        c.fillStyle = C.you; c.fillRect(b.x0*k, b.y0*k - fs*1.4, fs*2.4, fs*1.4);
+        c.fillStyle = C.ink; c.fillText('×' + t.units, b.x0*k + 4, b.y0*k - fs*0.7);
       }
     }
     const now = performance.now();
     flashes = flashes.filter(f => now - f.t < 600);
     for (const f of flashes) {
       const p = (now - f.t)/600;
-      c.globalAlpha = 1 - p; c.strokeStyle = AMBER; c.lineWidth = lw*1.5;
+      c.globalAlpha = 1 - p; c.strokeStyle = C.you; c.lineWidth = lw*1.5;
       c.beginPath(); c.arc(f.x*k, f.y*k, 10 + p*40*(dw/640), 0, 7); c.stroke();
-      c.fillStyle = '#fff'; c.font = `700 ${fs*1.3}px "Chakra Petch", system-ui, sans-serif`;
-      c.fillText('+' + f.u, f.x*k + 18, f.y*k - 18 - p*20);
+      c.font = `700 ${fs*1.4}px ${FONT_D}`;
+      c.lineWidth = 4; c.strokeStyle = C.ink; c.strokeText('+' + f.u, f.x*k + 18, f.y*k - 18 - p*20);
+      c.fillStyle = C.paper; c.fillText('+' + f.u, f.x*k + 18, f.y*k - 18 - p*20);
       c.globalAlpha = 1;
     }
   }
@@ -683,7 +775,7 @@ function loop(now){
   requestAnimationFrame(loop);
   const dt = Math.min(0.1, (now - last)/1000); last = now;
   const src = srcEl();
-  if (!src) { vctx.fillStyle = '#0E1215'; vctx.fillRect(0, 0, view.width, view.height); return; }
+  if (!src) { vctx.fillStyle = C.ink; vctx.fillRect(0, 0, view.width, view.height); return; }
   const [sw, sh] = dims(src); if (!sw || !sh) return;
   if (running) { if (source === 'demo') Demo.step(dt); st.elapsed += dt*1000; }
   const dw = Math.min(960, sw), dh = Math.round(dw*sh/sw);
@@ -696,13 +788,14 @@ function loop(now){
   overlay(dw, dh);
   if (now - uiT > 250) {
     uiT = now; renderMetrics();
-    $('#meta').textContent = (running ? fps.toFixed(0) : '—') + ' fps · ในภาพ ' + lastBlobs.length + (learn > 0 && S.mode === 'auto' && running ? ' · กำลังเรียนรู้พื้นหลัง' : '');
+    $('#fps').textContent = (running ? fps.toFixed(0) : '0') + ' fps';
+    $('#inView').textContent = (learn > 0 && S.mode === 'auto' && running) ? 'กำลังเรียนรู้พื้นหลัง' : 'ในภาพ ' + lastBlobs.length;
     if (source === 'demo') $('#truthN').textContent = fmt(Demo.truth);
     if (running) persistSoon();
   }
 }
 
-/* ---------- ROI drawing ---------- */
+/* ---------- area of interest ---------- */
 function norm(e){ const r = view.getBoundingClientRect(); return {x: Math.min(1, Math.max(0, (e.clientX - r.left)/r.width)), y: Math.min(1, Math.max(0, (e.clientY - r.top)/r.height))}; }
 function setRoiMode(on){ roiMode = on; $('#roiBtn').setAttribute('aria-pressed', String(on)); $('#screen').classList.toggle('roi', on); $('#roiHint').hidden = !on; }
 view.addEventListener('pointerdown', e => { if (!roiMode) return; const p = norm(e); drag = {x0:p.x, y0:p.y, x1:p.x, y1:p.y}; view.setPointerCapture(e.pointerId); e.preventDefault(); });
@@ -755,46 +848,51 @@ $('#plus').addEventListener('click', () => { unlockAudio(); addCount(1); });
 $('#minus').addEventListener('click', () => addCount(-1));
 $('#silence').addEventListener('click', () => { st.ack = true; renderCount(); });
 $('#calib').addEventListener('click', () => {
-  if (recent.length < 5) { $('#calibHint').textContent = `ต้องมีชิ้นงานผ่านเส้นอย่างน้อย 5 ชิ้น (ตอนนี้ ${recent.length} ชิ้น) ปล่อยแบบไม่ติดกันแล้วกดอีกครั้ง`; return; }
+  if (recent.length < 5) { $('#calibHint').textContent = `ต้องมีชิ้นงานผ่านเส้นอย่างน้อย 5 ชิ้น ตอนนี้ ${recent.length} ชิ้น ปล่อยแบบไม่ติดกันแล้วกดอีกครั้ง`; return; }
   const a = recent.slice(-20).sort((x, y) => x - y);
   S.single = Math.round(a[Math.floor(a.length/2)]); S.split = true; singleUI(); persist();
   $('#calibHint').textContent = `เรียนรู้จาก ${a.length} ชิ้นล่าสุด ก้อนที่ใหญ่ราว ${fmt(S.single*2)} px จะนับเป็น 2 ชิ้น`;
 });
-function confirmBtn(btn, label, action){
-  let armed = false, t = 0;
+function confirmBtn(btn, action){
+  const label = btn.textContent; let armed = false, t = 0;
   btn.addEventListener('click', () => {
-    if (!armed) { armed = true; btn.textContent = 'กดอีกครั้งเพื่อยืนยัน'; t = setTimeout(() => { armed = false; btn.innerHTML = label; }, 3000); return; }
-    clearTimeout(t); armed = false; btn.innerHTML = label; action();
+    if (!armed) { armed = true; btn.textContent = 'กดอีกครั้งเพื่อยืนยัน'; t = setTimeout(() => { armed = false; btn.textContent = label; }, 3000); return; }
+    clearTimeout(t); armed = false; btn.textContent = label; action();
   });
 }
-confirmBtn($('#newBatch'), 'บันทึกรอบ &amp; เริ่มใหม่', () => {
+confirmBtn($('#newBatch'), () => {
   if (st.count > 0) st.history.unshift({part: S.part, count: st.count, target: S.target, end: Date.now(), dur: st.elapsed});
   st.count = 0; st.elapsed = 0; st.batchStart = null; st.reached = false; st.ack = false;
   times = []; tracks = []; Demo.truth = 0;
   renderCount(); renderHistory(); persist();
 });
-confirmBtn($('#clearHist'), 'ล้างประวัติ', () => { st.history = []; renderHistory(); persist(); });
+confirmBtn($('#clearHist'), () => { st.history = []; renderHistory(); persist(); });
 function durTxt(ms){ const s = Math.round(ms/1000); return `${Math.floor(s/3600)}:${String(Math.floor(s/60)%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
 function timeTxt(t){ const d = new Date(t); return d.toLocaleDateString('th-TH', {day:'numeric', month:'short'}) + ' ' + d.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}); }
-function statusOf(h){ return h.count === h.target ? ['ok', 'ครบ'] : h.count > h.target ? ['over', 'เกิน ' + fmt(h.count - h.target)] : ['short', 'ขาด ' + fmt(h.target - h.count)]; }
+function statusOf(h){ return h.count === h.target ? ['', 'ครบ'] : h.count > h.target ? ['tag--over', 'เกิน ' + fmt(h.count - h.target)] : ['tag--short', 'ขาด ' + fmt(h.target - h.count)]; }
 function renderHistory(){
-  const tb = $('#histBody'); tb.innerHTML = '';
+  const ul = $('#histBody'); ul.textContent = '';
   for (const h of st.history) {
-    const tr = document.createElement('tr'), [cls, txt] = statusOf(h);
-    const cells = [timeTxt(h.end), h.part, fmt(h.count), fmt(h.target), null, durTxt(h.dur)];
-    cells.forEach((v, i) => {
-      const td = document.createElement('td');
-      if (i === 2 || i === 3 || i === 5) td.className = 'n';
-      if (i === 4) { const s = document.createElement('span'); s.className = 'tag ' + cls; s.textContent = txt; td.append(s); }
-      else td.textContent = v;
-      tr.append(td);
-    });
-    tb.append(tr);
+    const li = document.createElement('li'), [cls, txt] = statusOf(h);
+    const nm = document.createElement('div'); nm.className = 'runs__name';
+    const b = document.createElement('b'); b.textContent = h.part || 'ไม่ระบุชื่อ';
+    const when = document.createElement('span'); when.textContent = `จบ ${timeTxt(h.end)} ใช้เวลา ${durTxt(h.dur)}`;
+    const tag = document.createElement('span'); tag.className = 'tag ' + cls; tag.textContent = txt;
+    nm.append(b, when, tag);
+    const bar = document.createElement('div');
+    const pct = Math.min(100, h.count / Math.max(1, h.target) * 100);
+    bar.className = 'bar' + (pct >= 100 ? ' bar--full' : '');
+    bar.style.setProperty('--s', Math.max(pct, 12).toFixed(1));
+    bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', `นับได้ ${fmt(h.count)} จากเป้าหมาย ${fmt(h.target)} ชิ้น`);
+    const a1 = document.createElement('span'); a1.textContent = fmt(h.count);
+    const a2 = document.createElement('span'); a2.textContent = 'จาก ' + fmt(h.target);
+    bar.append(a1, a2);
+    li.append(nm, bar); ul.append(li);
   }
   $('#histEmpty').hidden = st.history.length > 0;
 }
 $('#copyHist').addEventListener('click', async () => {
-  const rows = [['เวลาจบรอบ','ชิ้นงาน','นับได้','เป้าหมาย','สถานะ','ใช้เวลา']]
+  const rows = [['เวลาจบล็อต','ชิ้นงาน','นับได้','เป้าหมาย','สถานะ','ใช้เวลา']]
     .concat(st.history.map(h => [new Date(h.end).toLocaleString('th-TH'), h.part, h.count, h.target, statusOf(h)[1], durTxt(h.dur)]));
   const txt = rows.map(r => r.join('\t')).join('\n'), btn = $('#copyHist');
   try { await navigator.clipboard.writeText(txt); btn.textContent = 'คัดลอกแล้ว'; }
@@ -802,7 +900,7 @@ $('#copyHist').addEventListener('click', async () => {
   setTimeout(() => btn.textContent = 'คัดลอกไปวางใน Excel', 2000);
 });
 document.addEventListener('keydown', e => {
-  if (e.target.matches('input, select, textarea')) return;
+  if (e.target.matches('input, select, textarea, button')) return;
   if (e.code === 'Space') { e.preventDefault(); unlockAudio(); setRunning(!running); }
   else if (e.key === '+' || e.key === '=') addCount(1);
   else if (e.key === '-') addCount(-1);
@@ -810,9 +908,8 @@ document.addEventListener('keydown', e => {
 
 /* ---------- start ---------- */
 bindSettings(); renderCount(); renderHistory();
-$('#truth').hidden = false;
 if (st.count === 0) setRunning(true);
-else notice('กู้คืนยอดนับเดิม ' + fmt(st.count) + ' ชิ้น', 'เลือกแหล่งภาพแล้วกด “เริ่มนับ” เพื่อนับต่อ หรือกด “บันทึกรอบ & เริ่มใหม่” เพื่อเริ่มล็อตใหม่');
+else notice('กู้คืนยอดนับเดิม ' + fmt(st.count) + ' ชิ้น', 'เลือกแหล่งภาพแล้วกด “เริ่มนับ” เพื่อนับต่อ หรือกด “บันทึกล็อต แล้วเริ่มใหม่” เพื่อเริ่มล็อตใหม่');
 requestAnimationFrame(loop);
 })();
 </script>
