@@ -34,7 +34,7 @@
   --font-display:"Funnel Display","Anuphan",ui-sans-serif,system-ui,sans-serif;
   --font-body:"Onest","Anuphan",ui-sans-serif,system-ui,sans-serif;
   --radius-card:14px; --radius-inner:8px; --radius-pill:999px;
-  --tracking-display:-0.035em; --nav-h:72px;
+  --tracking-display:-0.035em; --range-track:6px; --range-thumb:24px; --nav-h:72px;
   color-scheme:light;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -152,7 +152,7 @@ button,input,select{font:inherit;color:inherit}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:32px;margin:0;background:transparent;cursor:pointer}
 input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:var(--radius-pill);background:var(--color-rule)}
 input[type=range]::-moz-range-track{height:6px;border-radius:var(--radius-pill);background:var(--color-rule)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:24px;height:24px;margin-top:calc((6px - 24px) / 2);border-radius:50%;background:var(--color-ink);border:3px solid var(--color-paper);box-shadow:0 1px 3px var(--color-shadow)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:24px;height:24px;margin-top:calc((var(--range-track) - var(--range-thumb)) / 2);border-radius:50%;background:var(--color-ink);border:3px solid var(--color-paper);box-shadow:0 1px 3px var(--color-shadow)}
 input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--color-ink);border:3px solid var(--color-paper);box-shadow:0 1px 3px var(--color-shadow);box-sizing:border-box}
 input[type=range]:hover::-webkit-slider-thumb{background:var(--color-ink-2)}
 input[type=range]:focus-visible{outline:none}
