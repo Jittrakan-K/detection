@@ -1,0 +1,13 @@
+[
+ {
+  "mode": "redesign",
+  "depth": "restyle",
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "custom",
+  "axes": "light/geometric-sans/neutral",
+  "signature": "progress rail under two big counts; hex-nut mark split by the counting line",
+  "prompt": "minimal black and white geometric camera part counter, positions and functions kept",
+  "date": "2026-11-23"
+ }
+]
